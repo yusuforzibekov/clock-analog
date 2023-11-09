@@ -1,0 +1,2 @@
+# About the program 
+Hello this program is created for learning. You can teach your baby to teach clock. It also shows digital clock with hour, minute and second. Try to use it from the link in description. I have deployed it to Github pages.
