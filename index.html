@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Clock</title>
+    <style>
+        body {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: #000;
+            overflow: hidden;
+        }
+
+        #digital {
+            color: #fff;
+            font-size: 24px;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .number {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            text-align: center;
+            line-height: 30px;
+            color: #fff;
+            font-size: 24px;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        #canvas {
+            background-color: #333;
+            box-shadow: 3px 3px 5px #fff,
+                        -3px -3px 5px #fff,
+                        3px 3px 10px #fff,
+                        -3px -3px 10px #fff;
+            border-radius: 50%;
+            width: 400px;
+            height: 400px;
+            position: relative;
+        }
+
+        .hand {
+            position: absolute;
+            bottom: 50%;
+            transform-origin: bottom;
+            background: #fff;
+            transform: rotate(90deg);
+        }
+
+        #hour {
+            width: 10px;
+            height: 30%;
+            left: 49.5%;
+            background: red;
+        }
+
+        #minute {
+            width: 6px;
+            height: 40%;
+            left: 49.7%;
+            background: blue;
+        }
+
+        #second {
+            width: 2px;
+            height: 45%;
+            left: 49.9%;
+            background: green;
+        }
+
+        .center {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: #fff;
+            border-radius: 50%;
+            left: 47%;
+            bottom: 47%;
+        }
+
+        label {
+            color: #fff;
+        }
+
+        #digitalClock {
+            color: #fff;
+            font-size: 24px;
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="canvas">
+        <div id="hour" class="hand"></div>
+        <div id="minute" class="hand"></div>
+        <div id="second" class="hand"></div>
+        <div id="numbers"></div>
+        <div class="center"></div>
+    </div>
+    <p id="digitalClock"></p>
+    <label for="hourInput">hour</label>
+    <input type="range" min="0" max="12" id="hourInput">
+    <label for="minuteInput">minut</label>
+    <input type="range" min="0" max="60" id="minuteInput">
+    <label for="secondInput">second</label>
+    <input type="range" min="0" max="60" id="secondInput">
+    <script>
+        function rotateClock(id, degree) {
+            document.getElementById(id).style.transform = "rotate(" + degree + "deg)";
+        }
+        function updateClock(hour, minute, second) {
+            rotateClock('second', 360 * second / 60);
+            rotateClock('minute', 360 * minute / 60);
+            rotateClock('hour', 360 * hour / 12);
+        }
+        document.getElementById('hourInput').addEventListener('input', function () {
+            updateClock(this.value, document.getElementById('minuteInput').value, document.getElementById('secondInput').value);
+        });
+        document.getElementById('minuteInput').addEventListener('input', function () {
+            updateClock(document.getElementById('hourInput').value, this.value, document.getElementById('secondInput').value);
+        });
+        document.getElementById('secondInput').addEventListener('input', function () {
+            updateClock(document.getElementById('hourInput').value, document.getElementById('minuteInput').value, this.value);
+        });
+        document.getElementById('hourInput').addEventListener('input', function (e) {
+            updateDigitalClock(e.target.value, document.getElementById('minuteInput').value, document.getElementById('secondInput').value);
+        });
+
+        document.getElementById('minuteInput').addEventListener('input', function (e) {
+            updateDigitalClock(document.getElementById('hourInput').value, e.target.value, document.getElementById('secondInput').value);
+        });
+
+        document.getElementById('secondInput').addEventListener('input', function (e) {
+            updateDigitalClock(document.getElementById('hourInput').value, document.getElementById('minuteInput').value, e.target.value);
+        });
+
+        function updateDigitalClock(hour, minute, second) {
+            document.getElementById('digitalClock').innerText = `${hour.padStart(2, '0')}:${minute.padStart(2, '0')}:${second.padStart(2, '0')}`;
+        }
+        var numbers = document.getElementById('numbers');
+        for (var i = 1; i <= 12; i++) {
+            var number = document.createElement('div');
+            number.className = 'number';
+            number.innerHTML = i;
+            var angle = i * 30 * Math.PI / 180;
+            var x = 50 + Math.sin(angle) * 40;
+            var y = 50 - Math.cos(angle) * 40;
+            number.style.left = x + '%';
+            number.style.top = y + '%';
+            numbers.appendChild(number);
+        }
+    </script>
+</body>
+
+</html>
